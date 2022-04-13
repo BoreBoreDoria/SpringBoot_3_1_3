@@ -169,7 +169,7 @@
                                                     <div>
                                                         <th:block th:each="rol : ${roles}" >
                                                             <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
-                                                            <input th:type="checkbox" th:name="editRole" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                            <input th:type="checkbox" th:name="editRole" th:value="${rol.getName()}" th:attr="id=${rol.name()}"> </label>
                                                         </th:block>
                                                     </div>
                                                 </div>
@@ -221,7 +221,7 @@
                                                     <div>
                                                         <th:block th:each="rol : ${roles}" >
                                                             <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
-                                                            <input th:type="checkbox" th:name="${rol.name()}" th:value="${rol.name()}" th:attr="id=${'Delete_'+rol.name()}" readonly='readonly'> </label>
+                                                            <input th:type="checkbox" th:name="${rol.name()}" th:value="${rol.getName()}" th:attr="id=${'Delete_'+rol.name()}" readonly='readonly'> </label>
                                                         </th:block>
                                                     </div>
                                                 </div>
@@ -267,7 +267,7 @@
                                 <div>
                                     <th:block th:each="rol : ${roles}" >
                                         <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
-                                        <input th:type="checkbox" th:name="newRole" th:value="${rol.name()}" th:attr="id=${'New_'+rol.name()}" readonly='readonly'> </label>
+                                        <input th:type="checkbox" th:name="newRole" th:value="${rol.getName()}" th:attr="id=${'New_'+rol.name()}" readonly='readonly'> </label>
                                     </th:block>
                                 </div>
                                 </div>
