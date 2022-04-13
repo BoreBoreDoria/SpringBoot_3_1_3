@@ -1,17 +1,30 @@
 package com.example.SpringBootDemo.model;
 
+import com.example.SpringBootDemo.service.JsonService;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "bg_users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     private String name;
     private String password;
@@ -19,50 +32,24 @@ public class User implements UserDetails {
     private String confirmPassword;
     private String email;
     private Integer age;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "bg_user_role", joinColumns = @JoinColumn(name = "bg_user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> role;
 
-    public User() {
-    }
-
-    public Set<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.role = role;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Server> servers = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRole();
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     @Override
     public String getUsername() {
-        return null;
+        return name;
     }
 
     @Override
@@ -85,44 +72,31 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+    public String toJson() throws JsonProcessingException {
+        return JsonService.convertToJson(this);
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                ", role=" + role +
+        return "{" +
+                "\"id\":" + id +
+                ", \"name\":\"" + name + '\"' +
+                ", \"email\":\"" + email + '\"' +
+                ", \"age\":" + age +
+                ", \"role\":" + role +
                 '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.example.SpringBootDemo.service;
 
-import com.example.SpringBootDemo.Repository.UserRepository;
-import com.example.SpringBootDemo.model.Role;
+import com.example.SpringBootDemo.repository.UserRepository;
 import com.example.SpringBootDemo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {

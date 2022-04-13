@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:tr="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>USERS CRUD</title>
@@ -46,6 +47,14 @@
         .padding-left-zero a {
             height: 40px;
         }
+
+        thead tr th {
+            font-size: 14px;
+        }
+
+        .ratio {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +63,6 @@
     <div class="container-fluid">
         <ul class="nav list-group list-group-horizontal" id="siteHeader">
             <li><p th:text="${'Ваш Email: '+authUser.email + ' | '}" class='email'></p></li>
-            <li><p th:text="${'| Ваши роли: '+authUser.role}" class='role'></p></li>
         </ul>
         <ul id="logout"></ul>
     </div>
@@ -64,38 +72,65 @@
         <!--    Начало навигационной панели слева     -->
         <div class="col-2 padding-left-zero">
             <div class="nav nav-pills flex-column" id="roleNavBtn" role="tablist">
-                <a th:if="${authUser.role.size()==2}" class='block nav-link' data-toggle='pill' href='#adminPanel'>
-                    <p class='text-left text-capitalize'>ADMIN</p>
+                <a class='block nav-link active' data-toggle='pill' href='#infoPanel'>
+                    <p class='text-left text-capitalize'>Инфо</p>
                 </a>
-                <a class='block nav-link active' data-toggle='pill' href='#userPanel'>
-                    <p class='text-left text-capitalize'>USER</p>
+                <a th:if="${authUser.role.size()==2}" class='block nav-link' data-toggle='pill' href='#adminPanel'>
+                    <p class='text-left text-capitalize'>Администратор</p>
+                </a>
+                <a class='block nav-link' data-toggle='pill' href='#userPanel'>
+                    <p class='text-left text-capitalize'>Сотрудник</p>
+                </a>
+                <a class='block nav-link' data-toggle='pill' href='#serverPanel'>
+                    <p class='text-left text-capitalize'>Сервера</p>
                 </a>
             </div>
         </div>
         <!--    Конец левой навигационной панели    -->
         <div class="col-10">
             <div class="tab-content">
+                <div class="tab-pane active" id="infoPanel">
+                    <h1>Информация о приложении</h1>
+
+                    <h4>Приложение разработна в рамках выполнения лабораторной работы по дисциплине "Информационный менеджмент</h4>
+                    <h4>Использован язык программирования Java и JavaScript для обновления эллементов</h4>
+                    <h4>Выполнил работу Рочев Н.А., студент группы З-99э-1</h4>
+                    <br><br><br>
+                    <h3>Приложение необходимо для инвентарного учёта серверов</h3>
+                    <p>Были созданы следующие функции:</p>
+                    <p>1) авторизация на 2 роли. Пользователь (доступен только просмотр) и администратор (может добалвять и изменять данные)</p>
+                    <p>2) создание, удаление, редактировние пользователя</p>
+                    <p>3) создание, удаление, редактировние сервера</p>
+                    <p>4) Хранение данных в базе</p>
+
+                    <h3>Схема базы данных</h3>
+                    <img src="bg_user_role.png" alt="" width="60%" height="60%"></шьп>
+                </div>
                 <div class="tab-pane" id="adminPanel">
-                    <h1>Admin panel</h1>
+                    <h1>Панель администратора</h1>
                     <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active" data-toggle="tab" href="#table-users">Users table</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#add">New User</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#table-users">Таблица сотрудников</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#add">Новый сотрудник</a></li>
+                        <li><a class="nav-link " data-toggle="tab" href="#table-server">Таблица серверов</a></li>
+                        <li><a class="nav-link" data-toggle="tab" href="#add-server">Новый сервер</a></li>
+                        <li>
+                            <button id='uploadSubmit' type='submit' class='btn btn-light btn-lg'>Выгрузка</button>
+                      </li>
                     </ul>
                     <div class="tab-content container-fluid">
                         <div role="tabpanel" class="tab-pane active" id="table-users">
                             <br>
-                            <h5>All users</h5>
+                            <h5>Все пользователи</h5>
                             <br>
                             <table class="table">
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Password</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Roles</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Имя</th>
+                                    <th scope="col">Возраст</th>
+                                    <th scope="col">Почта</th>
+                                    <th scope="col">Роли</th>
+                                    <th scope="col">Событие</th>
                                 </tr>
                                 </thead>
                                 <tbody id="usersTableHere">
@@ -104,51 +139,47 @@
                                         <div class='modal-content'>
                                             <input type='hidden' id='idToEditUser'>
                                             <div class='modal-header'>
-                                                <h5>Edit user</h5>
+                                                <h5>Изменить пользователя</h5>
                                                 <button type='button' class='close' data-dismiss='modal'
                                                         aria-label='Close'><span aria-hidden='true'>&times;</span>
                                                 </button>
                                             </div>
                                             <div class='modal-body col-8 offset-2'>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Name</b></label>
+                                                    <label><b>Имя</b></label>
                                                     <input type='text' id='nameToEditUser' class='form-control'
                                                            required='required'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Age</b></label>
+                                                    <label><b>Возраст</b></label>
                                                     <input type='number' id='ageToEditUser' class='form-control'
                                                            required='required'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Email</b></label>
+                                                    <label><b>Почта</b></label>
                                                     <input type='email' id='emailToEditUser' class='form-control'
                                                            required='required'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Password</b></label>
+                                                    <label><b>Пароль</b></label>
                                                     <input type='password' id='passwordToEditUser' class='form-control'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Role</b></label>
-<!--                                                        <select id='rolesToEditUser' class='form-control' size='2'>-->
-<!--                                                            <option value='1'>ADMIN</option>-->
-<!--                                                            <option value='2'>USER</option>-->
-<!--                                                        </select>-->
+                                                    <label><b>Роль</b></label>
                                                     <div>
                                                         <th:block th:each="rol : ${roles}" >
-                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
-                                                            <input th:type="checkbox" th:name="${rol.name()}" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                            <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
+                                                            <input th:type="checkbox" th:name="editRole" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
                                                         </th:block>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class='modal-footer'>
                                                 <button type='button' class='btn btn-secondary' data-dismiss='modal'>
-                                                    Close
+                                                    Закрыть
                                                 </button>
                                                 <button type='submit' id='modalEditBtn' class='btn btn-primary success'
-                                                        data-dismiss='modal'>Edit
+                                                        data-dismiss='modal'>Редактировать
                                                 </button>
                                             </div>
                                         </div>
@@ -159,7 +190,7 @@
                                         <div class='modal-content'>
                                             <input type='hidden' id='passwordToDeleteUser'>
                                             <div class='modal-header'>
-                                                <h5>Delete</h5>
+                                                <h5>Удалить</h5>
                                                 <button type='button' class='close' data-dismiss='modal'
                                                         aria-label='Close'><span aria-hidden='true'>&times;</span>
                                                 </button>
@@ -171,25 +202,25 @@
                                                            readonly='readonly'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Name</b></label>
+                                                    <label><b>Имя</b></label>
                                                     <input type='text' id='nameToDeleteUser' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Age</b></label>
+                                                    <label><b>Возраст</b></label>
                                                     <input type='number' id='ageToDeleteUser' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Email</b></label>
+                                                    <label><b>Почта</b></label>
                                                     <input type='email' id='emailToDeleteUser' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
                                                 <div class='form-group text-center'>
-                                                    <label><b>Role</b></label>
+                                                    <label><b>Роль</b></label>
                                                     <div>
                                                         <th:block th:each="rol : ${roles}" >
-                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
                                                             <input th:type="checkbox" th:name="${rol.name()}" th:value="${rol.name()}" th:attr="id=${'Delete_'+rol.name()}" readonly='readonly'> </label>
                                                         </th:block>
                                                     </div>
@@ -197,11 +228,11 @@
                                             </div>
                                             <div class='modal-footer'>
                                                 <button type='button' class='btn btn-secondary'
-                                                        data-dismiss='modal'>Close
+                                                        data-dismiss='modal'>Закрыть
                                                 </button>
                                                 <button type='submit' id='modalDeleteBtn'
                                                         class='btn btn-primary success'
-                                                        data-dismiss='modal'>Delete
+                                                        data-dismiss='modal'>Удалить
                                                 </button>
                                             </div>
                                         </div>
@@ -212,67 +243,608 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="add">
                             <br>
-                            <h5>Add new user</h5>
+                            <h5>Добавить сотрудника</h5>
                             <br>
                             <div id="dropEmptyUser" class="col-3 offset-4">
                                 <div class='form-group text-center'> 
-                                <label><b>Name</b></label> 
-                                <input id='newName' type='text' class='form-control' placeholder='Name' required='required'>
+                                <label><b>Имя</b></label>
+                                <input id='newName' type='text' class='form-control' placeholder='Имя' required='required'>
                                 </div> 
                                 <div class='form-group text-center'> 
-                                <label><b>Age</b></label> 
-                                <input id='newAge' type='number' class='form-control' placeholder='Age' required='required'> 
+                                <label><b>Возраст</b></label>
+                                <input id='newAge' type='number' class='form-control' placeholder='Возраст' required='required'>
                                 </div> 
                                 <div class='form-group text-center'> 
-                                <label><b>Email</b></label> 
-                                <input id='newEmail' type='email' class='form-control' placeholder='Email' required='required'> 
+                                <label><b>Почта</b></label>
+                                <input id='newEmail' type='email' class='form-control' placeholder='Почта' required='required'>
                                 </div> 
                                 <div class='form-group text-center'> 
-                                <label><b>Password</b></label> 
-                                <input id='newPassword' type='password' class='form-control' placeholder='Password' required='required'> 
+                                <label><b>Пароль</b></label>
+                                <input id='newPassword' type='password' class='form-control' placeholder='Пароль' required='required'>
                                 </div> 
                                 <div class='form-group text-center'> 
-                                <label><b>Role</b></label> 
+                                <label><b>Роль</b></label>
                                 <div>
                                     <th:block th:each="rol : ${roles}" >
-                                        <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
-                                        <input th:type="checkbox" th:name="${rol.name()}" th:value="${rol.name()}" th:attr="id=${'New_'+rol.name()}" readonly='readonly'> </label>
+                                        <label th:for="${rol.name()}" th:text="${rol.getName()}"></label>
+                                        <input th:type="checkbox" th:name="newRole" th:value="${rol.name()}" th:attr="id=${'New_'+rol.name()}" readonly='readonly'> </label>
                                     </th:block>
                                 </div>
                                 </div>
                                 <div class="form-group text-center">
-                                <button id='addSubmit' type='submit' class='btn btn-success btn-lg'>Add new user</button>
+                                <button id='addSubmit' type='submit' class='btn btn-success btn-lg'>Добавить сотрудника</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="table-server">
+                            <br>
+                            <h5>Все сервера</h5>
+                            <br>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Инвентарный номер</th>
+                                    <th scope="col">Сотрудник</th>
+                                    <th scope="col">Адрес</th>
+                                    <th scope="col">Дата постановки</th>
+                                    <th scope="col">Дата экспл.</th>
+                                    <th scope="col">Время экспл.</th>
+                                    <th scope="col">Состояние</th>
+                                    <th scope="col">Действие</th>
+                                </tr>
+                                </thead>
+                                <tbody id="serversTableHere">
+                                <div class='modal fade' id="editServer">
+                                    <div class='modal-dialog modal-dialog-centered'>
+                                        <div class='modal-content'>
+                                            <input type='hidden' id='idToEditServer'>
+                                            <div class='modal-header'>
+                                                <h5>Изменить сервер</h5>
+                                                <button type='button' class='close' data-dismiss='modal'
+                                                        aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                                </button>
+
+                                            </div>
+                                            <div class='modal-body col-8 offset-2'>
+                                                <div class='form-group text-center'>
+                                                    <label><b>Инвентарный номер</b></label>
+                                                    <input type='text' id='inventoryNumberToEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип микросхемы</b></label>
+                                                    <input type='text' id='microshemaToEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Процессор</b></label>
+                                                    <input type='text' id='coreToEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Скорость процессора</b></label>
+                                                    <input type='number' id='coreSpeedToEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Макс. раз. памяти</b></label>
+                                                    <input type='number' id='maxValueEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип системы</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${systemType}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="systemType" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип памяти</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${memoryType}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="memoryType" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Размер памяти</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${memoryValue}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="memoryValue" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Порты</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${portList}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="checkbox" th:name="portList" th:value="${rol.toJson()}" th:attr="id='Port_' + ${rol.id}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Контроллеры</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${controllerList}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="checkbox" th:name="controllerList" th:value="${rol.toJson()}" th:attr="id='Controller_' + ${rol.id}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Адрес</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${locationList}" >
+                                                            <label th:for="${rol.location}" th:text="${rol.location}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="locationList" th:value="${rol.toJson()}" th:attr="id='Adres_' + ${rol.id}"> </label> <br>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата постановки на учёт</b></label>
+                                                    <input type='datetime-local' id='dateStartEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата старта эксплуатации</b></label>
+                                                    <input type='datetime-local' id='dateUseStartEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Максимальное время эксплуатации</b></label>
+                                                    <input type='number' id='useValueEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Статус сервера</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${serverStatus}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="serverStatus" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата начала ремонта</b></label>
+                                                    <input type='datetime-local' id='startRepairDateEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Информация о ремонте</b></label>
+                                                    <input type='text' id='repairInfoEditServer' class='form-control'
+                                                           required='required'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Сотрудник</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${users}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="user" th:value="${rol.toString()}" th:attr="id=${rol.name}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class='modal-footer'>
+                                                <button type='button' class='btn btn-secondary' data-dismiss='modal'>
+                                                    Закрыть
+                                                </button>
+                                                <button type='submit' id='modalEditServerBtn' class='btn btn-primary success'
+                                                        data-dismiss='modal'>Редактировать
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='modal fade' id='deleteServer'>
+                                    <div class='modal-dialog modal-dialog-centered'>
+                                        <div class='modal-content'>
+                                            <input type='hidden' id='passwordToDeleteServer'>
+                                            <div class='modal-header'>
+                                                <h5>Удалить</h5>
+                                                <button type='button' class='close' data-dismiss='modal'
+                                                        aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class='form-group text-center'>
+                                                <label><b>Id</b></label>
+                                                <input type='text' id='idToDeleteServer' class='form-control'
+                                                       readonly='readonly'>
+                                            </div>
+                                            <div class='modal-body col-8 offset-2'>
+                                                <div class='form-group text-center'>
+                                                    <label><b>Инвентарный номер</b></label>
+                                                    <input type='text' id='inventoryNumberToDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип микросхемы</b></label>
+                                                    <input type='text' id='microshemaToDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Процессор</b></label>
+                                                    <input type='text' id='coreToDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Скорость процессора</b></label>
+                                                    <input type='number' id='coreSpeedToDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Макс. раз. памяти</b></label>
+                                                    <input type='number' id='maxValueDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип системы</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${systemType}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteSystemType" th:value="${rol.name()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Тип памяти</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${memoryType}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteMemoryType" th:value="${rol.name()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Размер памяти</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${memoryValue}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteMemoryValue" th:value="${rol.name()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Порты</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${portList}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deletePortList" th:value="${rol}" th:attr="id='DeletePort_' + ${rol.id}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Контроллеры</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${controllerList}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteControllerList" th:value="${rol}" th:attr="id='DeleteController_' + ${rol.id}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Адрес</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${locationList}" >
+                                                            <label th:for="${rol.location}" th:text="${rol.location}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteLocationList" th:value="${rol}" th:attr="id='DeleteAdres_' + ${rol.id}"> </label> <br>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата постановки на учёт</b></label>
+                                                    <input type='datetime-local' id='dateStartDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата старта эксплуатации</b></label>
+                                                    <input type='datetime-local' id='dateUseStartDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Максимальное время эксплуатации</b></label>
+                                                    <input type='number' id='useValueDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Статус сервера</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${serverStatus}" >
+                                                            <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteServerStatus" th:value="${rol.name()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Дата начала ремонта</b></label>
+                                                    <input type='datetime-local' id='startRepairDateDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Информация о ремонте</b></label>
+                                                    <input type='text' id='repairInfoDeleteServer' class='form-control'
+                                                           readonly='readonly'>
+                                                </div>
+
+                                                <div class='form-group text-center'>
+                                                    <label><b>Сотрудник</b></label>
+                                                    <div>
+                                                        <th:block th:each="rol : ${users}" >
+                                                            <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteUser" th:value="${rol}" th:attr="id='Delete_' + ${rol.name}"> </label>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='modal-footer'>
+                                                <button type='button' class='btn btn-secondary'
+                                                        data-dismiss='modal'>Закрыть
+                                                </button>
+                                                <button type='submit' id='modalDeleteServerBtn'
+                                                        class='btn btn-primary success'
+                                                        data-dismiss='modal'>Удалить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="add-server">
+                            <br>
+                            <h5>Добавить сервер</h5>
+                            <br>
+                            <div id="dropEmptyServer" class="col-10 offset-1">
+                                <div class='modal-body col-8 offset-2'>
+                                    <div class='form-group text-center'>
+                                        <label><b>Инвентарный номер</b></label>
+                                        <input type='text' id='inventoryNumberToAddServer' class='form-control' placeholder="Инвентарный номер"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Тип микросхемы</b></label>
+                                        <input type='text' id='microshemaToAddServer' class='form-control' placeholder="Тип микросхемы"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Процессор</b></label>
+                                        <input type='text' id='coreToAddServer' class='form-control' placeholder="Процессор"
+                                               required='required'>
+                                    </div>
+                                    <div class='form-group text-center'>
+                                        <label><b>Скорость процессора</b></label>
+                                        <input type='number' id='coreSpeedToAddServer' class='form-control' placeholder="Скорость процессора"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Максимальный размер памяти</b></label>
+                                        <input type='number' id='maxValueAddServer' class='form-control' placeholder="Макс. раз. памяти"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Тип системы</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${systemType}" >
+                                                <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddSystemType" th:value="${rol.name()}" th:attr="id='Add_' + ${rol.name()}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Тип памяти</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${memoryType}" >
+                                                <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddMemoryType" th:value="${rol.name()}" th:attr="id='Add_' + ${rol.name()}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Размер памяти</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${memoryValue}" >
+                                                <label th:for="${rol.name()}" th:text="${rol.name()}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddMemoryValue" th:value="${rol.name()}" th:attr="id='Add_' + ${rol.name()}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Порты</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${portList}" >
+                                                <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                <input class="ratio" th:type="checkbox" th:name="AddPortList" th:value="${rol.toJson()}" th:attr="id='AddPort_' + ${rol.id}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Контроллеры</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${controllerList}" >
+                                                <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                <input class="ratio" th:type="checkbox" th:name="AddControllerList" th:value="${rol.toJson()}" th:attr="id='AddController_' + ${rol.id}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Адрес</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${locationList}" >
+                                                <label th:for="${rol.location}" th:text="${rol.location}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddLocationList" th:value="${rol.toJson()}" th:attr="id='AddAdres_' + ${rol.id}"> </label> <br>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Дата постановки на учёт</b></label>
+                                        <input type='datetime-local' id='dateStartAddServer' class='form-control' placeholder="Дата поставки на учёт"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Дата старта эксплуатации</b></label>
+                                        <input type='datetime-local' id='dateUseStartAddServer' class='form-control' placeholder="Дата старта эксплуатации"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Максимальное время эксплуатации</b></label>
+                                        <input type='number' id='useValueAddServer' class='form-control' placeholder="Макс. время эксплуатации"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Статус сервера</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${serverStatus}" >
+                                                <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddServerStatus" th:value="${rol.name()}" th:attr="id='Add_' + ${rol.name()}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Дата начала ремонта</b></label>
+                                        <input type='datetime-local' id='startRepairDateAddServer' class='form-control' placeholder="Дата начала ремонта"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Информация о ремонте</b></label>
+                                        <input type='text' id='repairInfoAddServer' class='form-control' placeholder="Информация о ремонте"
+                                               required='required'>
+                                    </div>
+
+                                    <div class='form-group text-center'>
+                                        <label><b>Сотрудник</b></label>
+                                        <div>
+                                            <th:block th:each="rol : ${users}" >
+                                                <label th:for="${rol.name}" th:text="${rol.name}"></label>
+                                                <input class="ratio" th:type="radio" th:name="AddUser" th:value="${rol}" th:attr="id='Add_' + ${rol.name}"> </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center">
+                                    <button id='addServerSubmit' type='submit' class='btn btn-success btn-lg'>Добавить сервер</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane active" id="userPanel">
-                    <h1>User information-page</h1>
+                <div class="tab-pane" id="userPanel">
+                    <h1>Информация о сотрудниках</h1>
                     <br>
                     <div class="container-fluid">
-                        <h5>About user</h5>
+                        <h5>О сотрудниках</h5>
                         <br>
                         <table class="table">
                             <thead>
                             <tr>
                                 <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Age</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Roles</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Возраст</th>
+                                <th scope="col">Почта</th>
+                                <th scope="col">Роли</th>
                             </tr>
                             </thead>
                             <tbody id="usersData">
+                            <th:block th:each="usr : ${users}">
                                 <tr>
-                                    <td th:text="${authUser.id}"></td>
-                                    <td th:text="${authUser.name}"></td>
-                                    <td th:text="${authUser.age}"></td>
-                                    <td th:text="${authUser.email}"></td>
-                                    <td th:text="${authUser.role}"></td>
-                                </tr>
+                                    <td th:text="${usr.getId()}"></td>
+                                    <td th:text="${usr.getName()}"></td>
+                                    <td th:text="${usr.getAge()}"></td>
+                                    <td th:text="${usr.getEmail()}"></td>
+                                    <td th:text="${usr.getRole()}"></td>
+                                <tr/>
+                            </th:block>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="serverPanel">
+                    <h1>Информация о серверах</h1>
+                    <br>
+                    <div class="container-fluid">
+                        <h5>О серверах</h5>
+                        <br>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Инвентарный номер</th>
+                                <th scope="col">Сотрудник</th>
+                                <th scope="col">Адрес</th>
+                                <th scope="col">Дата постановки</th>
+                                <th scope="col">Дата экспл.</th>
+                                <th scope="col">Время экспл.</th>
+                                <th scope="col">Состояние</th>
+                            </tr>
+                            </thead>
+                            <tbody id="serversTableHere2">
+                            <th:block th:each="usr : ${serverList}">
+                                <tr>
+                                    <td th:text="${usr.id}"></td>
+                                    <td th:text="${usr.inventoryNumber}"></td>
+                                    <td th:text="${usr.user.name}"></td>
+                                    <td th:text="${usr.location.location}"></td>
+                                    <td th:text="${usr.dateStart}"></td>
+                                    <td th:text="${usr.dateUseStart}"></td>
+                                    <td th:text="${usr.useValue}"></td>
+                                    <td th:text="${usr.serverStatus}"></td>
+                                <tr/>
+                            </th:block>
+                            </tbody>
                     </div>
                 </div>
             </div>
