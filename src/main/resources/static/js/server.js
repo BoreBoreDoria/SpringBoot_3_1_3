@@ -1,6 +1,6 @@
 function reloadTable() {
     fetch('\n' +
-        'https://server-admin-im.herokuapp.com:8080/rest/admin/').then(
+        'https://server-admin-im.herokuapp.com/rest/admin/').then(
         response => {
             response.json().then(
                 data => {
@@ -29,7 +29,7 @@ function reloadTable() {
 }
 
 function reloadServerTable() {
-    fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/server').then(
+    fetch('https://server-admin-im.herokuapp.com/rest/admin/server').then(
         response => {
             response.json().then(
                 data => {
@@ -60,7 +60,7 @@ function reloadServerTable() {
 }
 
 function fillEditModal(userId) {
-    $.get("https://server-admin-im.herokuapp.com:8080/rest/admin/" + userId, function (userJSON) {
+    $.get("https://server-admin-im.herokuapp.com/rest/admin/" + userId, function (userJSON) {
         $('#idToEditUser').val(userJSON.id);
         $('#nameToEditUser').val(userJSON.name);
         $('#ageToEditUser').val(userJSON.age);
@@ -80,7 +80,7 @@ function fillEditModal(userId) {
 }
 
 function fillServerEditModal(serverId) {
-    $.get("https://server-admin-im.herokuapp.com:8080/rest/admin/server/" + serverId, function (serverJSON) {
+    $.get("https://server-admin-im.herokuapp.com/rest/admin/server/" + serverId, function (serverJSON) {
         $('#idToEditServer').val(serverJSON.id);
         $('#inventoryNumberToEditServer').val(serverJSON.inventoryNumber);
         $('#microshemaToEditServer').val(serverJSON.microshema);
@@ -107,7 +107,7 @@ function fillServerEditModal(serverId) {
 }
 
 function fillDeleteModal(userId) {
-    $.get("https://server-admin-im.herokuapp.com:8080/rest/admin/" + userId, function (userJSON) {
+    $.get("https://server-admin-im.herokuapp.com/rest/admin/" + userId, function (userJSON) {
         $('#idToDeleteUser').val(userJSON.id);
         $('#nameToDeleteUser').val(userJSON.name);
         $('#ageToDeleteUser').val(userJSON.age);
@@ -126,7 +126,7 @@ function fillDeleteModal(userId) {
 }
 
 function fillServerDeleteModal(serverId) {
-    $.get("https://server-admin-im.herokuapp.com:8080/rest/admin/server/" + serverId, function (serverJSON) {
+    $.get("https://server-admin-im.herokuapp.com/rest/admin/server/" + serverId, function (serverJSON) {
         $('#idToDeleteServer').val(serverJSON.id);
         $('#inventoryNumberToDeleteServer').val(serverJSON.inventoryNumber);
         $('#microshemaToDeleteServer').val(serverJSON.microshema);
@@ -200,7 +200,7 @@ $(function () {
             password: $("#newPassword").val(),
             role: checked
         };
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/', {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/', {
             method: "POST",
             credentials: 'same-origin',
             body: JSON.stringify(user),
@@ -211,14 +211,14 @@ $(function () {
         reloadNewUserTable();
     });
     $('#modalDeleteBtn').on("click", function () {
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/' + $('#idToDeleteUser').val(), {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/' + $('#idToDeleteUser').val(), {
             method: "DELETE",
             credentials: 'same-origin',
         }).then(r => reloadTable());
     });
 
     $('#modalDeleteServerBtn').on("click", function () {
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/server/' + $('#idToDeleteServer').val(), {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/server/' + $('#idToDeleteServer').val(), {
             method: "DELETE",
             credentials: 'same-origin',
         }).then(r => reloadServerTable());
@@ -238,7 +238,7 @@ $(function () {
             password: $("#passwordToEditUser").val(),
             role: checked
         };
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/', {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/', {
             method: "PUT",
             credentials: 'same-origin',
             body: JSON.stringify(user),
@@ -280,7 +280,7 @@ $(function () {
 
         console.log(userJson);
 
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/server', {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/server', {
             method: "PUT",
             credentials: 'same-origin',
             body: JSON.stringify(userJson), headers: {
@@ -318,7 +318,7 @@ $(function () {
         });
 
         console.log(userJson);
-        fetch('https://server-admin-im.herokuapp.com:8080/rest/admin/server', {
+        fetch('https://server-admin-im.herokuapp.com/rest/admin/server', {
             method: "POST",
             credentials: 'same-origin',
             body: JSON.stringify(userJson),
