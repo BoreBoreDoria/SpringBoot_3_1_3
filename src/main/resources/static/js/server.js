@@ -1,5 +1,6 @@
 function reloadTable() {
-    fetch('http://localhost:8080/rest/admin/').then(
+    fetch('\n' +
+        'https://git.heroku.com/server-admin-im.git:8080/rest/admin/').then(
         response => {
             response.json().then(
                 data => {
@@ -28,7 +29,7 @@ function reloadTable() {
 }
 
 function reloadServerTable() {
-    fetch('http://localhost:8080/rest/admin/server').then(
+    fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server').then(
         response => {
             response.json().then(
                 data => {
@@ -59,7 +60,7 @@ function reloadServerTable() {
 }
 
 function fillEditModal(userId) {
-    $.get("http://localhost:8080/rest/admin/" + userId, function (userJSON) {
+    $.get("https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/" + userId, function (userJSON) {
         $('#idToEditUser').val(userJSON.id);
         $('#nameToEditUser').val(userJSON.name);
         $('#ageToEditUser').val(userJSON.age);
@@ -79,7 +80,7 @@ function fillEditModal(userId) {
 }
 
 function fillServerEditModal(serverId) {
-    $.get("http://localhost:8080/rest/admin/server/" + serverId, function (serverJSON) {
+    $.get("https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server/" + serverId, function (serverJSON) {
         $('#idToEditServer').val(serverJSON.id);
         $('#inventoryNumberToEditServer').val(serverJSON.inventoryNumber);
         $('#microshemaToEditServer').val(serverJSON.microshema);
@@ -106,7 +107,7 @@ function fillServerEditModal(serverId) {
 }
 
 function fillDeleteModal(userId) {
-    $.get("http://localhost:8080/rest/admin/" + userId, function (userJSON) {
+    $.get("https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/" + userId, function (userJSON) {
         $('#idToDeleteUser').val(userJSON.id);
         $('#nameToDeleteUser').val(userJSON.name);
         $('#ageToDeleteUser').val(userJSON.age);
@@ -125,7 +126,7 @@ function fillDeleteModal(userId) {
 }
 
 function fillServerDeleteModal(serverId) {
-    $.get("http://localhost:8080/rest/admin/server/" + serverId, function (serverJSON) {
+    $.get("https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server/" + serverId, function (serverJSON) {
         $('#idToDeleteServer').val(serverJSON.id);
         $('#inventoryNumberToDeleteServer').val(serverJSON.inventoryNumber);
         $('#microshemaToDeleteServer').val(serverJSON.microshema);
@@ -199,7 +200,7 @@ $(function () {
             password: $("#newPassword").val(),
             role: checked
         };
-        fetch('http://localhost:8080/rest/admin/', {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/', {
             method: "POST",
             credentials: 'same-origin',
             body: JSON.stringify(user),
@@ -210,14 +211,14 @@ $(function () {
         reloadNewUserTable();
     });
     $('#modalDeleteBtn').on("click", function () {
-        fetch('http://localhost:8080/rest/admin/' + $('#idToDeleteUser').val(), {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/' + $('#idToDeleteUser').val(), {
             method: "DELETE",
             credentials: 'same-origin',
         }).then(r => reloadTable());
     });
 
     $('#modalDeleteServerBtn').on("click", function () {
-        fetch('http://localhost:8080/rest/admin/server/' + $('#idToDeleteServer').val(), {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server/' + $('#idToDeleteServer').val(), {
             method: "DELETE",
             credentials: 'same-origin',
         }).then(r => reloadServerTable());
@@ -237,7 +238,7 @@ $(function () {
             password: $("#passwordToEditUser").val(),
             role: checked
         };
-        fetch('http://localhost:8080/rest/admin/', {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/', {
             method: "PUT",
             credentials: 'same-origin',
             body: JSON.stringify(user),
@@ -279,7 +280,7 @@ $(function () {
 
         console.log(userJson);
 
-        fetch('http://localhost:8080/rest/admin/server', {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server', {
             method: "PUT",
             credentials: 'same-origin',
             body: JSON.stringify(userJson), headers: {
@@ -317,7 +318,7 @@ $(function () {
         });
 
         console.log(userJson);
-        fetch('http://localhost:8080/rest/admin/server', {
+        fetch('https://git.heroku.com/server-admin-im.git\n:8080/rest/admin/server', {
             method: "POST",
             credentials: 'same-origin',
             body: JSON.stringify(userJson),
