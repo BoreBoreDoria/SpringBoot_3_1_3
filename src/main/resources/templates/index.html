@@ -289,7 +289,7 @@
                                     <th scope="col">Адрес</th>
                                     <th scope="col">Дата постановки</th>
                                     <th scope="col">Дата экспл.</th>
-                                    <th scope="col">Время экспл.</th>
+                                    <th scope="col">Время экспл. в годах</th>
                                     <th scope="col">Состояние</th>
                                     <th scope="col">Действие</th>
                                 </tr>
@@ -326,13 +326,13 @@
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Скорость процессора</b></label>
+                                                    <label><b>Скорость процессора в МГп</b></label>
                                                     <input type='number' id='coreSpeedToEditServer' class='form-control'
                                                            required='required'>
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Макс. раз. памяти</b></label>
+                                                    <label><b>Макс. раз. памяти в ГБ</b></label>
                                                     <input type='number' id='maxValueEditServer' class='form-control'
                                                            required='required'>
                                                 </div>
@@ -410,7 +410,7 @@
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Максимальное время эксплуатации</b></label>
+                                                    <label><b>Максимальное время эксплуатации в годах</b></label>
                                                     <input type='number' id='useValueEditServer' class='form-control'
                                                            required='required'>
                                                 </div>
@@ -420,7 +420,7 @@
                                                     <div>
                                                         <th:block th:each="rol : ${serverStatus}" >
                                                             <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
-                                                            <input class="ratio" th:type="radio" th:name="serverStatus" th:value="${rol.name()}" th:attr="id=${rol.name()}"> </label>
+                                                            <input class="ratio" th:type="radio" th:name="serverStatus" th:value="${rol.getStatus()}" th:attr="id=${rol.name()}"> </label>
                                                         </th:block>
                                                     </div>
                                                 </div>
@@ -494,13 +494,13 @@
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Скорость процессора</b></label>
+                                                    <label><b>Скорость процессора в МГп</b></label>
                                                     <input type='number' id='coreSpeedToDeleteServer' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Макс. раз. памяти</b></label>
+                                                    <label><b>Макс. раз. памяти в ГБ</b></label>
                                                     <input type='number' id='maxValueDeleteServer' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
@@ -578,7 +578,7 @@
                                                 </div>
 
                                                 <div class='form-group text-center'>
-                                                    <label><b>Максимальное время эксплуатации</b></label>
+                                                    <label><b>Максимальное время эксплуатации в годах</b></label>
                                                     <input type='number' id='useValueDeleteServer' class='form-control'
                                                            readonly='readonly'>
                                                 </div>
@@ -588,7 +588,7 @@
                                                     <div>
                                                         <th:block th:each="rol : ${serverStatus}" >
                                                             <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
-                                                            <input class="ratio" th:type="radio" th:name="deleteServerStatus" th:value="${rol.name()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
+                                                            <input class="ratio" th:type="radio" th:name="deleteServerStatus" th:value="${rol.getStatus()}" th:attr="id='Delete_' + ${rol.name()}"> </label>
                                                         </th:block>
                                                     </div>
                                                 </div>
@@ -654,13 +654,13 @@
                                                required='required'>
                                     </div>
                                     <div class='form-group text-center'>
-                                        <label><b>Скорость процессора</b></label>
+                                        <label><b>Скорость процессора в МГп</b></label>
                                         <input type='number' id='coreSpeedToAddServer' class='form-control' placeholder="Скорость процессора"
                                                required='required'>
                                     </div>
 
                                     <div class='form-group text-center'>
-                                        <label><b>Максимальный размер памяти</b></label>
+                                        <label><b>Максимальный размер памяти в ГБ</b></label>
                                         <input type='number' id='maxValueAddServer' class='form-control' placeholder="Макс. раз. памяти"
                                                required='required'>
                                     </div>
@@ -738,7 +738,7 @@
                                     </div>
 
                                     <div class='form-group text-center'>
-                                        <label><b>Максимальное время эксплуатации</b></label>
+                                        <label><b>Максимальное время эксплуатации в годах</b></label>
                                         <input type='number' id='useValueAddServer' class='form-control' placeholder="Макс. время эксплуатации"
                                                required='required'>
                                     </div>
@@ -748,7 +748,7 @@
                                         <div>
                                             <th:block th:each="rol : ${serverStatus}" >
                                                 <label th:for="${rol.name()}" th:text="${rol.getStatus()}"></label>
-                                                <input class="ratio" th:type="radio" th:name="AddServerStatus" th:value="${rol.name()}" th:attr="id='Add_' + ${rol.name()}"> </label>
+                                                <input class="ratio" th:type="radio" th:name="AddServerStatus" th:value="${rol.getStatus()}" th:attr="id='Add_' + ${rol.name()}"> </label>
                                             </th:block>
                                         </div>
                                     </div>
@@ -827,7 +827,7 @@
                                 <th scope="col">Адрес</th>
                                 <th scope="col">Дата постановки</th>
                                 <th scope="col">Дата экспл.</th>
-                                <th scope="col">Время экспл.</th>
+                                <th scope="col">Время экспл. в годах</th>
                                 <th scope="col">Состояние</th>
                             </tr>
                             </thead>
@@ -845,6 +845,7 @@
                                 <tr/>
                             </th:block>
                             </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
