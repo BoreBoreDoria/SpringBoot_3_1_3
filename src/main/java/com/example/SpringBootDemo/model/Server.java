@@ -5,7 +5,6 @@ import com.example.SpringBootDemo.enumerate.MemoryValue;
 import com.example.SpringBootDemo.enumerate.ServerStatus;
 import com.example.SpringBootDemo.enumerate.SystemType;
 import com.example.SpringBootDemo.service.JsonService;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.*;
 
@@ -48,7 +47,6 @@ public class Server {
             joinColumns = @JoinColumn(name = "server_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "controllers_id", referencedColumnName = "id"))
     private List<Controller> controllers = new ArrayList<>();
-
 
 
     @Enumerated
